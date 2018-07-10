@@ -4,6 +4,7 @@ import (
 	"github.com/chat/receiver/message"
 	notify "github.com/chat/receiver/notify_driver"
 	storage "github.com/chat/receiver/storage_driver"
+	context "golang.org/x/net/context"
 )
 
 func NewGrpcReceiver(
@@ -33,4 +34,31 @@ func (receiver *GrpcReceiver) Notify(message *message.Message) error {
 	err := receiver.NotifyDriver.Notify(message)
 
 	return err
+}
+
+func createMessage(msg *ChatMessage) *message.Message {
+	return &message.Message{
+		Text:      msg.Text,
+		AuthorId:  msg.AuthorId,
+		Timestamp: msg.Timestamp,
+	}
+}
+
+func (receiver *GrpcReceiver) SendMessage(ctx context.Context, msg *ChatMessage) (*ReceiverReply, error) {
+
+	message := createMessage(msg)
+
+	err := receiver.Save(message)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = receiver.Notify(message)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &ReceiverReply{Status: "ok"}, nil
 }
