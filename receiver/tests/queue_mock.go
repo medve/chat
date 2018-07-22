@@ -18,3 +18,13 @@ func (queue *QueueMock) Add(message *message.Message) error {
 	}
 	return nil
 }
+
+func (queue *QueueMock) Receive() (*message.Message, error) {
+
+	return nil, nil
+}
+
+func (queue *QueueMock) GetSubscribeChan() (chan *message.Message, error) {
+
+	return nil, nil
+}
