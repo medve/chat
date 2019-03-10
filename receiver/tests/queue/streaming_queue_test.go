@@ -1,9 +1,9 @@
-package receiver
+package tests
 
 import (
+	"github.com/chat/receiver"
 	"testing"
 
-	"github.com/chat/receiver/message"
 	"github.com/nats-io/go-nats"
 )
 
@@ -13,13 +13,13 @@ func TestSendAndReceiveNatsStreaming(t *testing.T) {
 	ec, _ := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
 	defer ec.Close()
 
-	sendCh := make(chan *message.Message)
+	sendCh := make(chan *receiver.Message)
 	ec.BindSendChan("hello", sendCh)
 
-	recvCh := make(chan *message.Message)
+	recvCh := make(chan *receiver.Message)
 	ec.BindRecvChan("hello", recvCh)
 
-	msg := &message.Message{Text: "asd", AuthorId: 123, Timestamp: 1}
+	msg := &receiver.Message{Text: "asd", AuthorId: 123, Timestamp: 1}
 
 	// Send via Go channels
 	sendCh <- msg
@@ -32,28 +32,28 @@ func TestSendAndReceiveNatsStreaming(t *testing.T) {
 	}
 }
 
-//func createQueue(t *testing.T, chanMod queue.ChanMode) (*queue.NatsQueue, *nats.EncodedConn) {
-//	ec, err := queue.CreateNatsConn(nats.DefaultURL)
+//func createQueue(t *testing.T, chanMod queue_test.ChanMode) (*queue_test.NatsQueue, *nats.EncodedConn) {
+//	ec, err := queue_test.CreateNatsConn(nats.DefaultURL)
 //
 //	if err != nil {
 //		t.Error("Error should not be occured", err)
 //	}
 //
-//	nq, err := queue.CreateNatsQueue("asd", ec, chanMod)
+//	nq, err := queue_test.CreateNatsQueue("asd", ec, chanMod)
 //
 //	if err != nil {
 //		t.Error("Error should not be occured", err)
 //	}
 //
 //	if nq == nil {
-//		t.Error("Nats queue should not be nil")
+//		t.Error("Nats queue_test should not be nil")
 //	}
 //
 //	return nq, ec
 //}
 //
 //func TestCreateQueue(t *testing.T) {
-//	nq, ec := createQueue(t, queue.Write)
+//	nq, ec := createQueue(t, queue_test.Write)
 //	defer ec.Close()
 //
 //	_, err := nq.Receive()
@@ -79,12 +79,12 @@ func TestSendAndReceiveNatsStreaming(t *testing.T) {
 //
 //func TestAddMsg(t *testing.T) {
 //
-//	// NOTE: If we will create write queue before read queue, than deadlock will be occured
+//	// NOTE: If we will create write queue_test before read queue_test, than deadlock will be occured
 //
-//	rcvNq, recvEc := createQueue(t, queue.Read)
+//	rcvNq, recvEc := createQueue(t, queue_test.Read)
 //	defer recvEc.Close()
 //
-//	nq, ec := createQueue(t, queue.Write)
+//	nq, ec := createQueue(t, queue_test.Write)
 //	defer ec.Close()
 //
 //	rcvMsgChan, err := rcvNq.GetSubscribeChan()
@@ -110,10 +110,10 @@ func TestSendAndReceiveNatsStreaming(t *testing.T) {
 //
 //func TestAddMsgRecv(t *testing.T) {
 //
-//	rcvNq, recvEc := createQueue(t, queue.Read)
+//	rcvNq, recvEc := createQueue(t, queue_test.Read)
 //	defer recvEc.Close()
 //
-//	nq, ec := createQueue(t, queue.Write)
+//	nq, ec := createQueue(t, queue_test.Write)
 //	defer ec.Close()
 //
 //

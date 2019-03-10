@@ -2,8 +2,7 @@ package queue
 
 import (
 	"errors"
-
-	"github.com/chat/receiver/message"
+	"github.com/chat/receiver"
 	"github.com/nats-io/go-nats"
 )
 
@@ -18,8 +17,8 @@ const (
 )
 
 type NatsQueue struct {
-	sendChan chan *message.Message
-	recvChan chan *message.Message
+	sendChan chan *receiver.Message
+	recvChan chan *receiver.Message
 }
 
 func CreateNatsConn(url string) (*nats.EncodedConn, error) {
@@ -35,13 +34,13 @@ func CreateNatsConn(url string) (*nats.EncodedConn, error) {
 func CreateNatsQueue(chanName string, natsConn *nats.EncodedConn, chanMode ChanMode) (*NatsQueue, error) {
 
 	var (
-		recvCh chan *message.Message
-		sendCh chan *message.Message
+		recvCh chan *receiver.Message
+		sendCh chan *receiver.Message
 		err    error
 	)
 
 	if chanMode == Read || chanMode == ReadAndWrite {
-		recvCh = make(chan *message.Message, BufferSize)
+		recvCh = make(chan *receiver.Message, BufferSize)
 		_, err = natsConn.BindRecvChan(chanName, recvCh)
 
 		if err != nil {
@@ -50,7 +49,7 @@ func CreateNatsQueue(chanName string, natsConn *nats.EncodedConn, chanMode ChanM
 	}
 
 	if chanMode == Write || chanMode == ReadAndWrite {
-		sendCh = make(chan *message.Message, BufferSize)
+		sendCh = make(chan *receiver.Message, BufferSize)
 		err = natsConn.BindSendChan(chanName, sendCh)
 
 		if err != nil {
@@ -64,7 +63,7 @@ func CreateNatsQueue(chanName string, natsConn *nats.EncodedConn, chanMode ChanM
 	}, nil
 }
 
-func (queue *NatsQueue) Add(message *message.Message) error {
+func (queue *NatsQueue) Add(message *receiver.Message) error {
 
 	if queue.sendChan == nil {
 		return errors.New("Send channel did not created")
@@ -75,7 +74,7 @@ func (queue *NatsQueue) Add(message *message.Message) error {
 	return nil
 }
 
-func (queue *NatsQueue) Receive() (*message.Message, error) {
+func (queue *NatsQueue) Receive() (*receiver.Message, error) {
 
 	if queue.recvChan == nil {
 		return nil, errors.New("Recv channel did not created")
@@ -86,7 +85,7 @@ func (queue *NatsQueue) Receive() (*message.Message, error) {
 	return result, nil
 }
 
-func (queue *NatsQueue) GetSubscribeChan() (chan *message.Message, error) {
+func (queue *NatsQueue) GetSubscribeChan() (chan *receiver.Message, error) {
 	if queue.recvChan == nil {
 		return nil, errors.New("Recv channel did not created")
 	}

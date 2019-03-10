@@ -1,12 +1,12 @@
-package receiver
+package tests
 
 import (
+	"github.com/chat/receiver"
 	"testing"
 
 	"github.com/chat/receiver/queue"
 
-	"github.com/chat/receiver/message"
-	nats "github.com/nats-io/go-nats"
+	"github.com/nats-io/go-nats"
 )
 
 func TestSendAndReceiveNats(t *testing.T) {
@@ -15,13 +15,13 @@ func TestSendAndReceiveNats(t *testing.T) {
 	ec, _ := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
 	defer ec.Close()
 
-	sendCh := make(chan *message.Message)
+	sendCh := make(chan *receiver.Message)
 	ec.BindSendChan("hello", sendCh)
 
-	recvCh := make(chan *message.Message)
+	recvCh := make(chan *receiver.Message)
 	ec.BindRecvChan("hello", recvCh)
 
-	msg := &message.Message{Text: "asd", AuthorId: 123, Timestamp: 1}
+	msg := &receiver.Message{Text: "asd", AuthorId: 123, Timestamp: 1}
 
 	// Send via Go channels
 	sendCh <- msg
@@ -48,7 +48,7 @@ func createQueue(t *testing.T, chanMod queue.ChanMode) (*queue.NatsQueue, *nats.
 	}
 
 	if nq == nil {
-		t.Error("Nats queue should not be nil")
+		t.Error("Nats queue_test should not be nil")
 	}
 
 	return nq, ec
@@ -70,7 +70,7 @@ func TestCreateQueue(t *testing.T) {
 		t.Error("Error should be occured. Write mode is setted.")
 	}
 
-	msg := &message.Message{Text: "asd", AuthorId: 123, Timestamp: 1}
+	msg := &receiver.Message{Text: "asd", AuthorId: 123, Timestamp: 1}
 	err = nq.Add(msg)
 
 	if err != nil {
@@ -81,7 +81,7 @@ func TestCreateQueue(t *testing.T) {
 
 func TestAddMsg(t *testing.T) {
 
-	// NOTE: If we will create write queue before read queue, than deadlock will be occured
+	// NOTE: If we will create write queue_test before read queue_test, than deadlock will be occured
 
 	rcvNq, recvEc := createQueue(t, queue.Read)
 	defer recvEc.Close()
@@ -95,7 +95,7 @@ func TestAddMsg(t *testing.T) {
 		t.Error("Error should not be occured.", err)
 	}
 
-	msg := &message.Message{Text: "asd", AuthorId: 123, Timestamp: 1}
+	msg := &receiver.Message{Text: "asd", AuthorId: 123, Timestamp: 1}
 	err = nq.Add(msg)
 
 	rcv_msg := <-rcvMsgChan
@@ -124,7 +124,7 @@ func TestAddMsgRecv(t *testing.T) {
 		t.Error("Error should not be occured.", err)
 	}
 
-	msg := &message.Message{Text: "asd", AuthorId: 123, Timestamp: 1}
+	msg := &receiver.Message{Text: "asd", AuthorId: 123, Timestamp: 1}
 	err = nq.Add(msg)
 
 	rcv_msg := <-rcvMsgChan

@@ -1,10 +1,25 @@
 package receiver
 
-import (
-	"github.com/chat/receiver/message"
-)
+type Notifier interface {
+	Notify(message *Message) error
+}
+
+type Queue interface {
+	Add(message *Message) error
+	Receive() (*Message, error)
+	GetSubscribeChan() (chan *Message, error)
+}
+
+type Saver interface {
+	Save(message *Message) error
+}
 
 type Receiver interface {
-	Save(message *message.Message) error
-	Notify(message *message.Message) error
+	Receive(message *Message) error
+}
+
+type Message struct {
+	Text      string
+	AuthorId  int64
+	Timestamp int32
 }
