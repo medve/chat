@@ -2,6 +2,8 @@ package db
 
 import (
 	"github.com/go-pg/pg/orm"
+
+	"github.com/chat/receiver"
 )
 
 type PostgresDbDriver struct {
@@ -28,4 +30,13 @@ func (driver *PostgresDbDriver) TestFunc() error {
 		}
 	}
 	return nil
+}
+
+func (driver *PostgresDbDriver) SaveMessage(message *receiver.Message) error {
+	err := driver.db.Insert(&Message{
+		Text:      message.Text,
+		AuthorId:  message.AuthorId,
+		Timestamp: message.Timestamp,
+	})
+	return err
 }

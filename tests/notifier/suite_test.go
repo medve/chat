@@ -1,9 +1,9 @@
 package tests
 
 import (
+	"github.com/chat/notifications"
 	"github.com/chat/receiver"
-	"github.com/chat/receiver/notifications"
-	"github.com/chat/receiver/tests/queue"
+	"github.com/chat/tests/queue"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"testing"

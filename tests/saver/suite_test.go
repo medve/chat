@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/suite"
 
 	"github.com/chat/receiver"
-	"github.com/chat/receiver/saver"
-	"github.com/chat/receiver/tests/queue"
+	"github.com/chat/saver"
+	"github.com/chat/tests/queue"
 )
 
 type TestSuite struct {

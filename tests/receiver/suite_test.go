@@ -2,8 +2,8 @@ package tests
 
 import (
 	"github.com/chat/receiver"
-	"github.com/chat/receiver/tests/notifier"
-	tests2 "github.com/chat/receiver/tests/saver"
+	"github.com/chat/tests/notifier"
+	tests2 "github.com/chat/tests/saver"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"testing"

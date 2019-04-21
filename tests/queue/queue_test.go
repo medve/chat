@@ -4,7 +4,7 @@ import (
 	"github.com/chat/receiver"
 	"testing"
 
-	"github.com/chat/receiver/queue"
+	"github.com/chat/queue"
 
 	"github.com/nats-io/go-nats"
 )
